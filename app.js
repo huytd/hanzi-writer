@@ -410,7 +410,7 @@ function initializeHanziWriter(character) {
             strokeAnimationSpeed: 1,
             delayBetweenStrokes: 300,
             strokeColor: '#2563eb',
-            strokeWidth: 5,
+            drawingWidth: 8,
             radicalColor: '#dc2626',
             highlightColor: '#fbbf24',
             outlineColor: '#d1d5db',
