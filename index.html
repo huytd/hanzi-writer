@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSK 1 汉字练习 - Chinese Character Practice</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer/dist/hanzi-writer.min.js" async></script>
+</head>
+
+<body>
+  <!-- Welcome Screen -->
+  <div id="welcome-screen" class="screen active">
+    <div class="container">
+      <div class="welcome-content">
+        <h1 class="app-title">HSK 1 汉字练习</h1>
+        <p class="app-subtitle">Learn Chinese Characters Through Writing</p>
+        <div class="welcome-illustration">
+          <div class="character-demo">汉字</div>
+        </div>
+        <button class="btn btn--primary btn--lg btn--full-width" id="start-learning-btn">
+          开始学习 Start Learning
+        </button>
+        <div class="welcome-features">
+          <div class="feature">
+            <span class="feature-icon">✍️</span>
+            <span>Practice Writing</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🎯</span>
+            <span>Quiz Mode</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">📊</span>
+            <span>Track Progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Screen -->
+  <div id="categories-screen" class="screen">
+    <div class="container">
+      <header class="screen-header">
+        <button class="btn btn--outline btn--sm back-btn" id="back-to-welcome">
+          ← Back
+        </button>
+        <h2>Choose Category</h2>
+        <button class="btn btn--outline btn--sm" id="settings-btn">
+          ⚙️
+        </button>
+      </header>
+      <div class="categories-grid" id="categories-grid">
+        <!-- Categories will be populated by JavaScript -->
+      </div>
+      <div class="progress-summary">
+        <h3>Your Progress</h3>
+        <div class="progress-stats" id="progress-stats">
+          <div class="stat">
+            <span class="stat-value" id="total-learned">0</span>
+            <span class="stat-label">Characters Learned</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="streak-days">0</span>
+            <span class="stat-label">Day Streak</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Character Selection Screen -->
+  <div id="character-selection-screen" class="screen">
+    <div class="container">
+      <header class="screen-header">
+        <button class="btn btn--outline btn--sm back-btn" id="back-to-categories">
+          ← Categories
+        </button>
+        <h2 id="category-title">Category</h2>
+        <div class="category-progress">
+          <span id="category-progress-text">0/0</span>
+        </div>
+      </header>
+      <div class="characters-grid" id="characters-grid">
+        <!-- Characters will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Screen -->
+  <div id="practice-screen" class="screen">
+    <div class="container">
+      <header class="screen-header">
+        <button class="btn btn--outline btn--sm back-btn" id="back-to-characters">
+          ← Characters
+        </button>
+        <div class="practice-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="stroke-progress"></div>
+          </div>
+        </div>
+        <button class="btn btn--outline btn--sm" id="practice-settings">
+          ⚙️
+        </button>
+      </header>
+
+      <div class="character-info">
+        <div class="character-display" id="character-display">汉</div>
+        <div class="character-details">
+          <div class="pinyin" id="character-pinyin">hàn</div>
+          <div class="meaning" id="character-meaning">Chinese character</div>
+        </div>
+        <button class="btn btn--secondary pronunciation-btn" id="pronunciation-btn">
+          🔊 Play Sound
+        </button>
+      </div>
+
+      <div class="writing-area">
+        <div id="hanzi-writer-container" class="hanzi-writer-container"></div>
+      </div>
+
+      <div class="practice-controls">
+        <div class="control-row">
+          <button class="btn btn--outline control-btn" id="hint-btn">
+            💡 Hint
+          </button>
+          <button class="btn btn--outline control-btn" id="show-outline-btn">
+            👁️ Outline
+          </button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn--secondary control-btn" id="clear-btn">
+            🔄 Clear
+          </button>
+          <button class="btn btn--primary control-btn" id="next-btn" style="display: none;">
+            Next →
+          </button>
+        </div>
+      </div>
+
+      <div class="practice-feedback" id="practice-feedback">
+        <!-- Feedback messages will appear here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div id="results-screen" class="screen">
+    <div class="container">
+      <div class="results-content">
+        <div class="results-header">
+          <div class="completion-icon" id="completion-icon">🎉</div>
+          <h2 id="results-title">Great Job!</h2>
+          <p id="results-message">You've completed this character</p>
+        </div>
+
+        <div class="results-stats">
+          <div class="result-stat">
+            <span class="stat-label">Accuracy</span>
+            <span class="stat-value" id="accuracy-score">0%</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-label">Attempts</span>
+            <span class="stat-value" id="attempts-count">0</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-label">Time</span>
+            <span class="stat-value" id="completion-time">0s</span>
+          </div>
+        </div>
+
+        <div class="achievements" id="new-achievements" style="display: none;">
+          <h3>🏆 New Achievement!</h3>
+          <div class="achievement-list" id="achievement-list">
+            <!-- New achievements will be shown here -->
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn btn--outline btn--lg" id="practice-again-btn">
+            🔄 Practice Again
+          </button>
+          <button class="btn btn--primary btn--lg" id="continue-learning-btn">
+            Continue Learning →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Screen -->
+  <div id="settings-screen" class="screen">
+    <div class="container">
+      <header class="screen-header">
+        <button class="btn btn--outline btn--sm back-btn" id="back-from-settings">
+          ← Back
+        </button>
+        <h2>Settings</h2>
+        <div></div>
+      </header>
+
+      <div class="settings-content">
+        <div class="setting-group">
+          <h3>Practice Settings</h3>
+          <div class="setting-item">
+            <label for="hint-after">Show hints after</label>
+            <select id="hint-after" class="form-control">
+              <option value="1">1 mistake</option>
+              <option value="2" selected>2 mistakes</option>
+              <option value="3">3 mistakes</option>
+              <option value="0">Never</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="stroke-speed">Stroke animation speed</label>
+            <select id="stroke-speed" class="form-control">
+              <option value="0.5">Slow</option>
+              <option value="1" selected>Normal</option>
+              <option value="2">Fast</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Display Settings</h3>
+          <div class="setting-item">
+            <label for="show-pinyin">Show pinyin</label>
+            <input type="checkbox" id="show-pinyin" checked>
+          </div>
+          <div class="setting-item">
+            <label for="show-meaning">Show meaning</label>
+            <input type="checkbox" id="show-meaning" checked>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Library Status</h3>
+          <div class="setting-item">
+            <div class="library-status">
+              <div id="library-status-indicator" class="status-indicator">
+                <span class="indicator-dot"></span>
+                <span class="indicator-text">Checking...</span>
+              </div>
+              <button class="btn btn--outline btn--sm" onclick="handleRetryLibrary()">
+                Reload Library
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Progress</h3>
+          <div class="setting-item">
+            <button class="btn btn--outline" id="reset-progress-btn">
+              Reset All Progress
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Loading application...</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

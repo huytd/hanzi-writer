@@ -1,0 +1,261 @@
+{
+  "characters": [
+    {
+      "character": "一",
+      "pinyin": "yī",
+      "meaning": "one",
+      "category": "number"
+    },
+    {
+      "character": "二",
+      "pinyin": "èr",
+      "meaning": "two",
+      "category": "number"
+    },
+    {
+      "character": "三",
+      "pinyin": "sān",
+      "meaning": "three",
+      "category": "number"
+    },
+    {
+      "character": "人",
+      "pinyin": "rén",
+      "meaning": "person",
+      "category": "noun"
+    },
+    {
+      "character": "我",
+      "pinyin": "wǒ",
+      "meaning": "I, me",
+      "category": "pronoun"
+    },
+    {
+      "character": "你",
+      "pinyin": "nǐ",
+      "meaning": "you",
+      "category": "pronoun"
+    },
+    {
+      "character": "他",
+      "pinyin": "tā",
+      "meaning": "he, him",
+      "category": "pronoun"
+    },
+    {
+      "character": "大",
+      "pinyin": "dà",
+      "meaning": "big",
+      "category": "adjective"
+    },
+    {
+      "character": "小",
+      "pinyin": "xiǎo",
+      "meaning": "small",
+      "category": "adjective"
+    },
+    {
+      "character": "好",
+      "pinyin": "hǎo",
+      "meaning": "good",
+      "category": "adjective"
+    },
+    {
+      "character": "不",
+      "pinyin": "bù",
+      "meaning": "not",
+      "category": "adverb"
+    },
+    {
+      "character": "很",
+      "pinyin": "hěn",
+      "meaning": "very",
+      "category": "adverb"
+    },
+    {
+      "character": "是",
+      "pinyin": "shì",
+      "meaning": "to be",
+      "category": "verb"
+    },
+    {
+      "character": "有",
+      "pinyin": "yǒu",
+      "meaning": "to have",
+      "category": "verb"
+    },
+    {
+      "character": "来",
+      "pinyin": "lái",
+      "meaning": "to come",
+      "category": "verb"
+    },
+    {
+      "character": "去",
+      "pinyin": "qù",
+      "meaning": "to go",
+      "category": "verb"
+    },
+    {
+      "character": "看",
+      "pinyin": "kàn",
+      "meaning": "to look",
+      "category": "verb"
+    },
+    {
+      "character": "吃",
+      "pinyin": "chī",
+      "meaning": "to eat",
+      "category": "verb"
+    },
+    {
+      "character": "水",
+      "pinyin": "shuǐ",
+      "meaning": "water",
+      "category": "noun"
+    },
+    {
+      "character": "火",
+      "pinyin": "huǒ",
+      "meaning": "fire",
+      "category": "noun"
+    },
+    {
+      "character": "日",
+      "pinyin": "rì",
+      "meaning": "sun, day",
+      "category": "noun"
+    },
+    {
+      "character": "月",
+      "pinyin": "yuè",
+      "meaning": "moon, month",
+      "category": "noun"
+    },
+    {
+      "character": "山",
+      "pinyin": "shān",
+      "meaning": "mountain",
+      "category": "noun"
+    },
+    {
+      "character": "田",
+      "pinyin": "tián",
+      "meaning": "field",
+      "category": "noun"
+    },
+    {
+      "character": "口",
+      "pinyin": "kǒu",
+      "meaning": "mouth",
+      "category": "noun"
+    },
+    {
+      "character": "手",
+      "pinyin": "shǒu",
+      "meaning": "hand",
+      "category": "noun"
+    },
+    {
+      "character": "木",
+      "pinyin": "mù",
+      "meaning": "wood",
+      "category": "noun"
+    },
+    {
+      "character": "林",
+      "pinyin": "lín",
+      "meaning": "forest",
+      "category": "noun"
+    },
+    {
+      "character": "上",
+      "pinyin": "shàng",
+      "meaning": "up, above",
+      "category": "direction"
+    },
+    {
+      "character": "下",
+      "pinyin": "xià",
+      "meaning": "down, below",
+      "category": "direction"
+    },
+    {
+      "character": "中",
+      "pinyin": "zhōng",
+      "meaning": "middle",
+      "category": "direction"
+    },
+    {
+      "character": "里",
+      "pinyin": "lǐ",
+      "meaning": "inside",
+      "category": "direction"
+    },
+    {
+      "character": "四",
+      "pinyin": "sì",
+      "meaning": "four",
+      "category": "number"
+    },
+    {
+      "character": "五",
+      "pinyin": "wǔ",
+      "meaning": "five",
+      "category": "number"
+    },
+    {
+      "character": "六",
+      "pinyin": "liù",
+      "meaning": "six",
+      "category": "number"
+    },
+    {
+      "character": "七",
+      "pinyin": "qī",
+      "meaning": "seven",
+      "category": "number"
+    },
+    {
+      "character": "八",
+      "pinyin": "bā",
+      "meaning": "eight",
+      "category": "number"
+    },
+    {
+      "character": "九",
+      "pinyin": "jiǔ",
+      "meaning": "nine",
+      "category": "number"
+    },
+    {
+      "character": "十",
+      "pinyin": "shí",
+      "meaning": "ten",
+      "category": "number"
+    },
+    {
+      "character": "车",
+      "pinyin": "chē",
+      "meaning": "car",
+      "category": "noun"
+    },
+    {
+      "character": "门",
+      "pinyin": "mén",
+      "meaning": "door",
+      "category": "noun"
+    },
+    {
+      "character": "家",
+      "pinyin": "jiā",
+      "meaning": "home",
+      "category": "noun"
+    }
+  ],
+  "metadata": {
+    "total_count": 42,
+    "difficulty_level": "HSK 1",
+    "focus": "writing_practice"
+  }
+}
