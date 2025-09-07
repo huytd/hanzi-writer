@@ -1360,10 +1360,6 @@ select.form-control {
   font-weight: var(--font-weight-medium);
 }
 
-.pronunciation-btn {
-  min-height: 48px;
-  font-size: var(--font-size-base);
-}
 
 /* Writing Area */
 .writing-area {
@@ -1788,6 +1784,7 @@ select.form-control {
   margin: 0;
 }
 
+
 /* Library Status Indicator */
 .library-status {
   display: flex;
@@ -2007,13 +2004,6 @@ select.form-control {
     line-height: 1.3;
   }
   
-  .pronunciation-btn {
-    min-height: 36px;
-    font-size: var(--font-size-xs);
-    padding: var(--space-6) var(--space-12);
-    align-self: flex-start;
-    margin-top: var(--space-4);
-  }
   
   /* Make writing area more prominent on mobile */
   .writing-area {
@@ -2075,12 +2065,6 @@ select.form-control {
     line-height: 1.3;
   }
   
-  .pronunciation-btn {
-    min-height: 44px;
-    font-size: var(--font-size-base);
-    align-self: flex-start;
-    margin-top: var(--space-6);
-  }
 }
 
 @media (min-width: 768px) {
@@ -2265,13 +2249,6 @@ select.form-control {
     line-height: 1.2;
   }
   
-  .pronunciation-btn {
-    min-height: 32px;
-    font-size: 10px;
-    padding: var(--space-4) var(--space-8);
-    align-self: flex-start;
-    margin-top: var(--space-2);
-  }
 
   .welcome-content {
     padding: var(--space-24) var(--space-8);

@@ -3,6 +3,7 @@
 // Global app instance
 let hskApp = null;
 
+
 // Track practice session data
 let currentSessionData = {
     startTime: null,
@@ -1016,22 +1017,6 @@ function setupEventListeners() {
         });
     }
     
-    const pronunciationBtn = document.getElementById('pronunciation-btn');
-    if (pronunciationBtn) {
-        pronunciationBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (hskApp && hskApp.currentCharacter) {
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(hskApp.currentCharacter.pinyin);
-                    utterance.lang = 'zh-CN';
-                    utterance.rate = 1.0;
-                    speechSynthesis.speak(utterance);
-                } else {
-                    showFeedback('hint', `Pronunciation: ${hskApp.currentCharacter.pinyin}`);
-                }
-            }
-        });
-    }
     
     const nextBtn = document.getElementById('next-btn');
     if (nextBtn) {
