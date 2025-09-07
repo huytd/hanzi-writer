@@ -489,7 +489,7 @@ function setupEventListeners() {
                 if ('speechSynthesis' in window) {
                     const utterance = new SpeechSynthesisUtterance(hskApp.currentCharacter.pinyin);
                     utterance.lang = 'zh-CN';
-                    utterance.rate = 0.7;
+                    utterance.rate = 1.0;
                     speechSynthesis.speak(utterance);
                 } else {
                     showFeedback('hint', `Pronunciation: ${hskApp.currentCharacter.pinyin}`);
