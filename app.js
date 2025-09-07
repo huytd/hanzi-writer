@@ -208,10 +208,42 @@ function resetAllProgress() {
 // Character data (will be loaded from JSON file)
 let CHARACTER_DATA = [];
 
+// Split multi-character words into individual characters
+function splitMultiCharacterWords(characters) {
+    const singleCharacters = [];
+    
+    characters.forEach(char => {
+        if (char.character.length === 1) {
+            // Single character - add as is
+            singleCharacters.push(char);
+        } else {
+            // Multi-character word - split into individual characters
+            const chars = char.character.split('');
+            const pinyinParts = char.pinyin.split(' ');
+            
+            chars.forEach((singleChar, index) => {
+                // Create individual character entry
+                const singleCharEntry = {
+                    character: singleChar,
+                    pinyin: pinyinParts[index] || char.pinyin,
+                    meaning: char.meaning,
+                    category: char.category,
+                    originalWord: char.character, // Keep reference to original word
+                    position: index + 1, // Position in the original word
+                    totalChars: chars.length
+                };
+                singleCharacters.push(singleCharEntry);
+            });
+        }
+    });
+    
+    return singleCharacters;
+}
+
 // Load character data from JSON file
 async function loadCharacterData() {
     try {
-        const response = await fetch('hsk1_characters.json');
+        const response = await fetch('hsk2_characters.json');
         if (!response.ok) {
             throw new Error(`Failed to load character data: ${response.status}`);
         }
@@ -220,80 +252,51 @@ async function loadCharacterData() {
 
         // Map category names to match existing code structure
         const categoryMapping = {
-            'number': 'numbers',
-            'adverb': 'common',
-            'verb': 'verbs'
+            'number': 'number',
+            'adverb': 'adverb',
+            'verb': 'verb',
+            'adjective': 'adjective',
+            'pronoun': 'pronoun',
+            'noun': 'noun',
+            'direction': 'direction',
+            'conjunction': 'conjunction',
+            'interjection': 'interjection',
+            'particle': 'particle',
+            'measure': 'measure'
         };
 
         // Transform the data and apply category mapping
-        CHARACTER_DATA = data.characters.map(char => ({
+        const mappedCharacters = data.characters.map(char => ({
             ...char,
             category: categoryMapping[char.category] || char.category
         }));
 
-        console.log(`Loaded ${CHARACTER_DATA.length} characters from JSON file`);
+        // Split multi-character words into individual characters
+        CHARACTER_DATA = splitMultiCharacterWords(mappedCharacters);
+
+        console.log(`Loaded ${CHARACTER_DATA.length} individual characters from ${data.characters.length} vocabulary entries`);
         return CHARACTER_DATA;
     } catch (error) {
         console.error('Error loading character data:', error);
-        // Fallback to hardcoded data if JSON loading fails
-        CHARACTER_DATA = [
-            {"character": "一", "pinyin": "yī", "meaning": "one", "category": "numbers"},
-            {"character": "二", "pinyin": "èr", "meaning": "two", "category": "numbers"},
-            {"character": "三", "pinyin": "sān", "meaning": "three", "category": "numbers"},
-            {"character": "人", "pinyin": "rén", "meaning": "person", "category": "people"},
-            {"character": "我", "pinyin": "wǒ", "meaning": "I, me", "category": "pronouns"},
-            {"character": "你", "pinyin": "nǐ", "meaning": "you", "category": "pronouns"},
-            {"character": "他", "pinyin": "tā", "meaning": "he, him", "category": "pronouns"},
-            {"character": "大", "pinyin": "dà", "meaning": "big", "category": "adjectives"},
-            {"character": "小", "pinyin": "xiǎo", "meaning": "small", "category": "adjectives"},
-            {"character": "好", "pinyin": "hǎo", "meaning": "good", "category": "adjectives"},
-            {"character": "不", "pinyin": "bù", "meaning": "not", "category": "common"},
-            {"character": "很", "pinyin": "hěn", "meaning": "very", "category": "common"},
-            {"character": "是", "pinyin": "shì", "meaning": "to be", "category": "verbs"},
-            {"character": "有", "pinyin": "yǒu", "meaning": "to have", "category": "verbs"},
-            {"character": "来", "pinyin": "lái", "meaning": "to come", "category": "verbs"},
-            {"character": "去", "pinyin": "qù", "meaning": "to go", "category": "verbs"},
-            {"character": "看", "pinyin": "kàn", "meaning": "to look", "category": "verbs"},
-            {"character": "吃", "pinyin": "chī", "meaning": "to eat", "category": "verbs"},
-            {"character": "水", "pinyin": "shuǐ", "meaning": "water", "category": "nouns"},
-            {"character": "火", "pinyin": "huǒ", "meaning": "fire", "category": "nouns"},
-            {"character": "日", "pinyin": "rì", "meaning": "sun, day", "category": "nouns"},
-            {"character": "月", "pinyin": "yuè", "meaning": "moon, month", "category": "nouns"},
-            {"character": "山", "pinyin": "shān", "meaning": "mountain", "category": "nouns"},
-            {"character": "田", "pinyin": "tián", "meaning": "field", "category": "nouns"},
-            {"character": "口", "pinyin": "kǒu", "meaning": "mouth", "category": "nouns"},
-            {"character": "手", "pinyin": "shǒu", "meaning": "hand", "category": "nouns"},
-            {"character": "木", "pinyin": "mù", "meaning": "wood", "category": "nouns"},
-            {"character": "林", "pinyin": "lín", "meaning": "forest", "category": "nouns"},
-            {"character": "上", "pinyin": "shàng", "meaning": "up, above", "category": "directions"},
-            {"character": "下", "pinyin": "xià", "meaning": "down, below", "category": "directions"},
-            {"character": "中", "pinyin": "zhōng", "meaning": "middle", "category": "directions"},
-            {"character": "里", "pinyin": "lǐ", "meaning": "inside", "category": "directions"},
-            {"character": "四", "pinyin": "sì", "meaning": "four", "category": "numbers"},
-            {"character": "五", "pinyin": "wǔ", "meaning": "five", "category": "numbers"},
-            {"character": "六", "pinyin": "liù", "meaning": "six", "category": "numbers"},
-            {"character": "七", "pinyin": "qī", "meaning": "seven", "category": "numbers"},
-            {"character": "八", "pinyin": "bā", "meaning": "eight", "category": "numbers"},
-            {"character": "九", "pinyin": "jiǔ", "meaning": "nine", "category": "numbers"},
-            {"character": "十", "pinyin": "shí", "meaning": "ten", "category": "numbers"},
-            {"character": "车", "pinyin": "chē", "meaning": "car", "category": "nouns"},
-            {"character": "门", "pinyin": "mén", "meaning": "door", "category": "nouns"},
-            {"character": "家", "pinyin": "jiā", "meaning": "home", "category": "nouns"}
-        ];
-        console.log('Using fallback hardcoded data');
+        // Fallback to hardcoded HSK 2 data if JSON loading fails
+        CHARACTER_DATA = [];
+        console.log('Using fallback hardcoded HSK 2 data');
         return CHARACTER_DATA;
     }
 }
 
 const CATEGORIES = {
-    "numbers": {"name": "Numbers 数字", "icon": "🔢", "description": "Learn basic numbers 1-10"},
-    "pronouns": {"name": "Pronouns 代词", "icon": "👤", "description": "Personal pronouns like I, you, he"},
-    "verbs": {"name": "Verbs 动词", "icon": "🏃", "description": "Common action words"},
-    "adjectives": {"name": "Adjectives 形容词", "icon": "⭐", "description": "Describing words"},
-    "nouns": {"name": "Nouns 名词", "icon": "🏠", "description": "Objects and things"},
-    "directions": {"name": "Directions 方向", "icon": "🧭", "description": "Position and direction words"},
-    "people": {"name": "People 人物", "icon": "👥", "description": "Words about people"},
-    "common": {"name": "Common 常用", "icon": "📝", "description": "Frequently used words"}
+    "number": {"name": "Numbers 数字", "icon": "🔢", "description": "Learn basic numbers 1-10"},
+    "pronoun": {"name": "Pronouns 代词", "icon": "👤", "description": "Personal pronouns like I, you, he"},
+    "verb": {"name": "Verbs 动词", "icon": "🏃", "description": "Common action words"},
+    "adjective": {"name": "Adjectives 形容词", "icon": "⭐", "description": "Describing words"},
+    "adverb": {"name": "Adverbs 副词", "icon": "💬", "description": "Words that modify verbs, adjectives, or other adverbs"},
+    "noun": {"name": "Nouns 名词", "icon": "🏠", "description": "Objects and things"},
+    "direction": {"name": "Directions 方向", "icon": "🧭", "description": "Position and direction words"},
+    "conjunction": {"name": "Conjunctions 连词", "icon": "🔗", "description": "Words that connect clauses or sentences"},
+    "interjection": {"name": "Interjections 感叹词", "icon": "😮", "description": "Words expressing emotion or exclamation"},
+    "particle": {"name": "Particles 助词", "icon": "✨", "description": "Grammatical particles in Chinese"},
+    "measure": {"name": "Measure Words 量词", "icon": "📏", "description": "Words used to count or measure nouns"}
 };
 
 // HanziWriter availability check
@@ -459,10 +462,16 @@ function renderCharacterSelection(categoryId) {
             statusIcon = '<div class="progress-badge">●</div>';
         }
         
+        // Show meaning with context if it's from a multi-character word
+        let displayMeaning = character.meaning;
+        if (character.originalWord && character.originalWord.length > 1) {
+            displayMeaning = `${character.meaning} (${character.originalWord})`;
+        }
+        
         card.innerHTML = `
             <div class="character-display-small">${character.character}</div>
             <div class="character-pinyin-small">${character.pinyin}</div>
-            <div class="character-meaning-small">${character.meaning}</div>
+            <div class="character-meaning-small">${displayMeaning}</div>
             ${statusIcon}
         `;
         
@@ -501,7 +510,13 @@ function setupPracticeScreen(character) {
     
     if (charDisplay) charDisplay.textContent = character.character;
     if (pinyin) pinyin.textContent = character.pinyin;
-    if (meaning) meaning.textContent = character.meaning;
+    
+    // Show meaning with context if it's from a multi-character word
+    let displayMeaning = character.meaning;
+    if (character.originalWord && character.originalWord.length > 1) {
+        displayMeaning = `${character.meaning} (from ${character.originalWord})`;
+    }
+    if (meaning) meaning.textContent = displayMeaning;
     
     // Reset progress bar
     const progressFill = document.getElementById('stroke-progress');

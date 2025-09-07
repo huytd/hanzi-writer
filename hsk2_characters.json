@@ -67,6 +67,24 @@
       "category": "number"
     },
     {
+      "character": "百",
+      "pinyin": "bǎi",
+      "meaning": "hundred",
+      "category": "number"
+    },
+    {
+      "character": "千",
+      "pinyin": "qiān",
+      "meaning": "thousand",
+      "category": "number"
+    },
+    {
+      "character": "万",
+      "pinyin": "wàn",
+      "meaning": "ten thousand",
+      "category": "number"
+    },
+    {
       "character": "我",
       "pinyin": "wǒ",
       "meaning": "I, me",
@@ -97,6 +115,18 @@
       "category": "pronoun"
     },
     {
+      "character": "你们",
+      "pinyin": "nǐmen",
+      "meaning": "you (plural)",
+      "category": "pronoun"
+    },
+    {
+      "character": "他们",
+      "pinyin": "tāmen",
+      "meaning": "they, them",
+      "category": "pronoun"
+    },
+    {
       "character": "这",
       "pinyin": "zhè",
       "meaning": "this",
@@ -106,6 +136,12 @@
       "character": "那",
       "pinyin": "nà",
       "meaning": "that",
+      "category": "pronoun"
+    },
+    {
+      "character": "每",
+      "pinyin": "měi",
+      "meaning": "every",
       "category": "pronoun"
     },
     {
@@ -154,6 +190,12 @@
       "character": "怎么样",
       "pinyin": "zěnmeyàng",
       "meaning": "how about",
+      "category": "pronoun"
+    },
+    {
+      "character": "为什么",
+      "pinyin": "wèishénme",
+      "meaning": "why",
       "category": "pronoun"
     },
     {
@@ -211,6 +253,108 @@
       "category": "adjective"
     },
     {
+      "character": "白",
+      "pinyin": "bái",
+      "meaning": "white",
+      "category": "adjective"
+    },
+    {
+      "character": "长",
+      "pinyin": "cháng",
+      "meaning": "long",
+      "category": "adjective"
+    },
+    {
+      "character": "对",
+      "pinyin": "duì",
+      "meaning": "correct",
+      "category": "adjective"
+    },
+    {
+      "character": "高",
+      "pinyin": "gāo",
+      "meaning": "tall, high",
+      "category": "adjective"
+    },
+    {
+      "character": "贵",
+      "pinyin": "guì",
+      "meaning": "expensive",
+      "category": "adjective"
+    },
+    {
+      "character": "好吃",
+      "pinyin": "hǎochī",
+      "meaning": "tasty, delicious",
+      "category": "adjective"
+    },
+    {
+      "character": "黑",
+      "pinyin": "hēi",
+      "meaning": "black, dark",
+      "category": "adjective"
+    },
+    {
+      "character": "红",
+      "pinyin": "hóng",
+      "meaning": "red, popular",
+      "category": "adjective"
+    },
+    {
+      "character": "近",
+      "pinyin": "jìn",
+      "meaning": "nearby, close",
+      "category": "adjective"
+    },
+    {
+      "character": "快",
+      "pinyin": "kuài",
+      "meaning": "quick",
+      "category": "adjective"
+    },
+    {
+      "character": "快乐",
+      "pinyin": "kuàilè",
+      "meaning": "happy",
+      "category": "adjective"
+    },
+    {
+      "character": "累",
+      "pinyin": "lèi",
+      "meaning": "tired",
+      "category": "adjective"
+    },
+    {
+      "character": "慢",
+      "pinyin": "màn",
+      "meaning": "slow",
+      "category": "adjective"
+    },
+    {
+      "character": "忙",
+      "pinyin": "máng",
+      "meaning": "busy",
+      "category": "adjective"
+    },
+    {
+      "character": "便宜",
+      "pinyin": "piányi",
+      "meaning": "cheap, inexpensive",
+      "category": "adjective"
+    },
+    {
+      "character": "新",
+      "pinyin": "xīn",
+      "meaning": "new",
+      "category": "adjective"
+    },
+    {
+      "character": "远",
+      "pinyin": "yuǎn",
+      "meaning": "far",
+      "category": "adjective"
+    },
+    {
       "character": "不",
       "pinyin": "bù",
       "meaning": "no, not",
@@ -238,6 +382,72 @@
       "character": "没有",
       "pinyin": "méiyǒu",
       "meaning": "did not",
+      "category": "adverb"
+    },
+    {
+      "character": "别",
+      "pinyin": "bié",
+      "meaning": "do not",
+      "category": "adverb"
+    },
+    {
+      "character": "非常",
+      "pinyin": "fēicháng",
+      "meaning": "very, extremely",
+      "category": "adverb"
+    },
+    {
+      "character": "还",
+      "pinyin": "hái",
+      "meaning": "still, in addition",
+      "category": "adverb"
+    },
+    {
+      "character": "就",
+      "pinyin": "jiù",
+      "meaning": "just, only",
+      "category": "adverb"
+    },
+    {
+      "character": "也",
+      "pinyin": "yě",
+      "meaning": "also",
+      "category": "adverb"
+    },
+    {
+      "character": "已经",
+      "pinyin": "yǐjīng",
+      "meaning": "already",
+      "category": "adverb"
+    },
+    {
+      "character": "一起",
+      "pinyin": "yīqǐ",
+      "meaning": "together",
+      "category": "adverb"
+    },
+    {
+      "character": "再",
+      "pinyin": "zài",
+      "meaning": "again",
+      "category": "adverb"
+    },
+    {
+      "character": "真",
+      "pinyin": "zhēn",
+      "meaning": "really, truly",
+      "category": "adverb"
+    },
+    {
+      "character": "正在",
+      "pinyin": "zhèngzài",
+      "meaning": "in the process of",
+      "category": "adverb"
+    },
+    {
+      "character": "最",
+      "pinyin": "zuì",
+      "meaning": "most, -est",
       "category": "adverb"
     },
     {
@@ -415,9 +625,21 @@
       "category": "verb"
     },
     {
-      "character": "下雨",
-      "pinyin": "xiàyǔ",
-      "meaning": "to rain",
+      "character": "可以",
+      "pinyin": "kěyǐ",
+      "meaning": "may, can",
+      "category": "verb"
+    },
+    {
+      "character": "要",
+      "pinyin": "yào",
+      "meaning": "to want, to need",
+      "category": "verb"
+    },
+    {
+      "character": "可能",
+      "pinyin": "kěnéng",
+      "meaning": "maybe, might",
       "category": "verb"
     },
     {
@@ -460,6 +682,234 @@
       "character": "没关系",
       "pinyin": "méi guānxì",
       "meaning": "it doesn't matter",
+      "category": "verb"
+    },
+    {
+      "character": "下雨",
+      "pinyin": "xiàyǔ",
+      "meaning": "to rain",
+      "category": "verb"
+    },
+    {
+      "character": "帮助",
+      "pinyin": "bāngzhù",
+      "meaning": "help, to help",
+      "category": "verb"
+    },
+    {
+      "character": "唱歌",
+      "pinyin": "chànggē",
+      "meaning": "to sing a song",
+      "category": "verb"
+    },
+    {
+      "character": "出",
+      "pinyin": "chū",
+      "meaning": "to go out, to happen",
+      "category": "verb"
+    },
+    {
+      "character": "穿",
+      "pinyin": "chuān",
+      "meaning": "to wear, to put on",
+      "category": "verb"
+    },
+    {
+      "character": "到",
+      "pinyin": "dào",
+      "meaning": "to arrive, to (a place)",
+      "category": "verb"
+    },
+    {
+      "character": "等",
+      "pinyin": "děng",
+      "meaning": "to wait (for)",
+      "category": "verb"
+    },
+    {
+      "character": "懂",
+      "pinyin": "dǒng",
+      "meaning": "to understand",
+      "category": "verb"
+    },
+    {
+      "character": "告诉",
+      "pinyin": "gàosu",
+      "meaning": "to tell, to inform",
+      "category": "verb"
+    },
+    {
+      "character": "给",
+      "pinyin": "gěi",
+      "meaning": "to give",
+      "category": "verb"
+    },
+    {
+      "character": "介绍",
+      "pinyin": "jièshào",
+      "meaning": "to introduce",
+      "category": "verb"
+    },
+    {
+      "character": "进",
+      "pinyin": "jìn",
+      "meaning": "to enter, to go in",
+      "category": "verb"
+    },
+    {
+      "character": "觉得",
+      "pinyin": "juéde",
+      "meaning": "to think, to feel",
+      "category": "verb"
+    },
+    {
+      "character": "开始",
+      "pinyin": "kāishǐ",
+      "meaning": "to start",
+      "category": "verb"
+    },
+    {
+      "character": "离",
+      "pinyin": "lí",
+      "meaning": "to be distanced from",
+      "category": "verb"
+    },
+    {
+      "character": "旅游",
+      "pinyin": "lǚyóu",
+      "meaning": "to travel",
+      "category": "verb"
+    },
+    {
+      "character": "卖",
+      "pinyin": "mài",
+      "meaning": "to sell",
+      "category": "verb"
+    },
+    {
+      "character": "跑步",
+      "pinyin": "pǎobù",
+      "meaning": "to jog, to go running",
+      "category": "verb"
+    },
+    {
+      "character": "起床",
+      "pinyin": "qǐchuáng",
+      "meaning": "to get up (out of bed)",
+      "category": "verb"
+    },
+    {
+      "character": "让",
+      "pinyin": "ràng",
+      "meaning": "to let, to make",
+      "category": "verb"
+    },
+    {
+      "character": "上学",
+      "pinyin": "shàngxué",
+      "meaning": "to go to school",
+      "category": "verb"
+    },
+    {
+      "character": "上班",
+      "pinyin": "shàngbān",
+      "meaning": "to go to work",
+      "category": "verb"
+    },
+    {
+      "character": "生病",
+      "pinyin": "shēngbìng",
+      "meaning": "to fall ill, to get sick",
+      "category": "verb"
+    },
+    {
+      "character": "说话",
+      "pinyin": "shuōhuà",
+      "meaning": "to speak (words), to talk",
+      "category": "verb"
+    },
+    {
+      "character": "送",
+      "pinyin": "sòng",
+      "meaning": "to give (a gift), to deliver",
+      "category": "verb"
+    },
+    {
+      "character": "跳舞",
+      "pinyin": "tiàowǔ",
+      "meaning": "to dance",
+      "category": "verb"
+    },
+    {
+      "character": "完",
+      "pinyin": "wán",
+      "meaning": "to finish",
+      "category": "verb"
+    },
+    {
+      "character": "玩",
+      "pinyin": "wán",
+      "meaning": "to play (with), to have fun",
+      "category": "verb"
+    },
+    {
+      "character": "问",
+      "pinyin": "wèn",
+      "meaning": "to ask",
+      "category": "verb"
+    },
+    {
+      "character": "笑",
+      "pinyin": "xiào",
+      "meaning": "to laugh, to smile",
+      "category": "verb"
+    },
+    {
+      "character": "姓",
+      "pinyin": "xìng",
+      "meaning": "to be surnamed",
+      "category": "verb"
+    },
+    {
+      "character": "休息",
+      "pinyin": "xiūxi",
+      "meaning": "to rest, to sleep",
+      "category": "verb"
+    },
+    {
+      "character": "游泳",
+      "pinyin": "yóuyǒng",
+      "meaning": "to swim",
+      "category": "verb"
+    },
+    {
+      "character": "运动",
+      "pinyin": "yùndòng",
+      "meaning": "to exercise, to play sports",
+      "category": "verb"
+    },
+    {
+      "character": "找",
+      "pinyin": "zhǎo",
+      "meaning": "to look for, to call on someone",
+      "category": "verb"
+    },
+    {
+      "character": "知道",
+      "pinyin": "zhīdào",
+      "meaning": "to know",
+      "category": "verb"
+    },
+    {
+      "character": "准备",
+      "pinyin": "zhǔnbèi",
+      "meaning": "to prepare",
+      "category": "verb"
+    },
+    {
+      "character": "走",
+      "pinyin": "zǒu",
+      "meaning": "to walk, to go, to leave",
       "category": "verb"
     },
     {
@@ -739,6 +1189,12 @@
       "category": "noun"
     },
     {
+      "character": "晚上",
+      "pinyin": "wǎnshang",
+      "meaning": "evening",
+      "category": "noun"
+    },
+    {
       "character": "分钟",
       "pinyin": "fēnzhōng",
       "meaning": "minute",
@@ -754,6 +1210,30 @@
       "character": "字",
       "pinyin": "zì",
       "meaning": "character",
+      "category": "noun"
+    },
+    {
+      "character": "时间",
+      "pinyin": "shíjiān",
+      "meaning": "time",
+      "category": "noun"
+    },
+    {
+      "character": "年",
+      "pinyin": "nián",
+      "meaning": "year",
+      "category": "noun"
+    },
+    {
+      "character": "月",
+      "pinyin": "yuè",
+      "meaning": "month",
+      "category": "noun"
+    },
+    {
+      "character": "日",
+      "pinyin": "rì",
+      "meaning": "day",
       "category": "noun"
     },
     {
@@ -802,6 +1282,30 @@
       "character": "和",
       "pinyin": "hé",
       "meaning": "and",
+      "category": "conjunction"
+    },
+    {
+      "character": "但是",
+      "pinyin": "dànshì",
+      "meaning": "but",
+      "category": "conjunction"
+    },
+    {
+      "character": "虽然",
+      "pinyin": "suīrán",
+      "meaning": "although",
+      "category": "conjunction"
+    },
+    {
+      "character": "所以",
+      "pinyin": "suǒyǐ",
+      "meaning": "so, therefore",
+      "category": "conjunction"
+    },
+    {
+      "character": "因为",
+      "pinyin": "yīnwèi",
+      "meaning": "because",
       "category": "conjunction"
     },
     {
@@ -872,10 +1376,11 @@
     }
   ],
   "metadata": {
-    "total_count": 150,
-    "difficulty_level": "HSK 1",
-    "source": "AllSet Learning HSK 1 Vocabulary",
-    "url": "https://resources.allsetlearning.com/chinese/vocabulary/HSK_1_Vocabulary",
-    "focus": "writing_practice"
+    "total_count": 300,
+    "difficulty_level": "HSK 2",
+    "source": "AllSet Learning HSK 1-2 Vocabulary",
+    "url": "https://resources.allsetlearning.com/chinese/vocabulary/HSK_2_Vocabulary",
+    "focus": "writing_practice",
+    "includes_hsk1": true
   }
 }
