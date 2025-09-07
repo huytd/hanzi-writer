@@ -60,72 +60,8 @@ const CATEGORIES = {
     "common": {"name": "Common 常用", "icon": "📝", "description": "Frequently used words"}
 };
 
-// HanziWriter loading management
+// HanziWriter availability check
 let isHanziWriterLoaded = false;
-let hanziWriterLoadAttempts = 0;
-const MAX_LOAD_ATTEMPTS = 3;
-
-// Wait for HanziWriter to be available
-function waitForHanziWriter() {
-    return new Promise((resolve, reject) => {
-        if (typeof HanziWriter !== 'undefined') {
-            isHanziWriterLoaded = true;
-            resolve();
-            return;
-        }
-        
-        let attempts = 0;
-        const maxAttempts = 30; // 3 seconds
-        const checkInterval = setInterval(() => {
-            attempts++;
-            if (typeof HanziWriter !== 'undefined') {
-                isHanziWriterLoaded = true;
-                clearInterval(checkInterval);
-                resolve();
-            } else if (attempts >= maxAttempts) {
-                clearInterval(checkInterval);
-                reject(new Error('HanziWriter failed to load within timeout'));
-            }
-        }, 100);
-    });
-}
-
-// Retry loading HanziWriter
-async function retryLoadHanziWriter() {
-    hanziWriterLoadAttempts++;
-    
-    if (hanziWriterLoadAttempts > MAX_LOAD_ATTEMPTS) {
-        showLibraryError('Maximum retry attempts reached. Please check your internet connection.');
-        return false;
-    }
-    
-    showLoadingMessage(`Attempting to load writing library... (${hanziWriterLoadAttempts}/${MAX_LOAD_ATTEMPTS})`);
-    
-    try {
-        // Remove existing script if any
-        const existingScript = document.querySelector('script[src*="hanzi-writer"]');
-        if (existingScript) {
-            existingScript.remove();
-        }
-        
-        // Create new script element
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/hanzi-writer/dist/hanzi-writer.min.js';
-        script.async = true;
-        
-        // Add to head
-        document.head.appendChild(script);
-        
-        // Wait for it to load
-        await waitForHanziWriter();
-        hideLoadingMessage();
-        return true;
-        
-    } catch (error) {
-        console.error('Failed to load HanziWriter:', error);
-        return await retryLoadHanziWriter();
-    }
-}
 
 // Show loading message
 function showLoadingMessage(message) {
@@ -147,41 +83,10 @@ function hideLoadingMessage() {
     }
 }
 
-// Show library error with retry option
-function showLibraryError(message) {
-    hideLoadingMessage();
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'library-error';
-    errorDiv.innerHTML = `
-        <div class="library-error-content">
-            <div class="error-icon">⚠️</div>
-            <h3>Library Loading Error</h3>
-            <p>${message}</p>
-            <div class="error-actions">
-                <button class="btn btn--primary" onclick="handleRetryLibrary()">Retry Loading</button>
-                <button class="btn btn--secondary" onclick="hideLibraryError()">Continue Without Writing</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(errorDiv);
-}
-
-// Hide library error
-function hideLibraryError() {
-    const errorDiv = document.querySelector('.library-error');
-    if (errorDiv) {
-        errorDiv.remove();
-    }
-}
-
-// Handle retry button click - make it globally accessible
-window.handleRetryLibrary = async function() {
-    hideLibraryError();
-    hanziWriterLoadAttempts = 0;
-    const success = await retryLoadHanziWriter();
-    if (success) {
-        showFeedback('success', 'Writing library loaded successfully!');
-    }
+// Check if HanziWriter is available
+function checkHanziWriterAvailability() {
+    isHanziWriterLoaded = typeof HanziWriter !== 'undefined';
+    return isHanziWriterLoaded;
 }
 
 // Update library status indicator
@@ -191,7 +96,7 @@ function updateLibraryStatus() {
         const dot = indicator.querySelector('.indicator-dot');
         const text = indicator.querySelector('.indicator-text');
         
-        if (typeof HanziWriter !== 'undefined') {
+        if (checkHanziWriterAvailability()) {
             dot.className = 'indicator-dot loaded';
             text.textContent = 'Writing library loaded';
         } else {
@@ -322,7 +227,7 @@ function renderCharacterSelection(categoryId) {
     console.log('Character selection rendered');
 }
 
-async function selectCharacter(categoryId, index) {
+function selectCharacter(categoryId, index) {
     console.log('Character selected:', categoryId, index);
     
     const charactersInCategory = CHARACTER_DATA.filter(char => char.category === categoryId);
@@ -331,21 +236,6 @@ async function selectCharacter(categoryId, index) {
     if (hskApp) {
         hskApp.currentCharacter = character;
         hskApp.currentCharacterIndex = index;
-    }
-    
-    // Check if HanziWriter is loaded before setting up practice screen
-    if (!isHanziWriterLoaded) {
-        showLoadingMessage('Loading writing library...');
-        try {
-            await waitForHanziWriter();
-            hideLoadingMessage();
-        } catch (error) {
-            console.error('HanziWriter not available:', error);
-            const success = await retryLoadHanziWriter();
-            if (!success) {
-                return; // Don't proceed to practice screen
-            }
-        }
     }
     
     setupPracticeScreen(character);
@@ -394,7 +284,7 @@ function initializeHanziWriter(character) {
             <div class="writer-fallback">
                 <div class="fallback-character">${character.character}</div>
                 <p>Writing practice unavailable</p>
-                <button class="btn btn--primary" onclick="handleRetryLibrary()">Reload Writing Library</button>
+                <p class="fallback-details">Please refresh the page to reload the writing library</p>
             </div>
         `;
         return;
@@ -453,7 +343,6 @@ function initializeHanziWriter(character) {
                 <div class="fallback-character">${character.character}</div>
                 <p>Writing practice unavailable</p>
                 <p class="fallback-details">Study the character shape and pronunciation</p>
-                <button class="btn btn--primary" onclick="handleRetryLibrary()">Retry Loading</button>
             </div>
         `;
     }
@@ -484,10 +373,6 @@ function showFeedback(type, message) {
     }
 }
 
-// Network connectivity check
-function checkNetworkConnection() {
-    return navigator.onLine;
-}
 
 // Setup all event listeners
 function setupEventListeners() {
@@ -538,9 +423,15 @@ function setupEventListeners() {
     if (hintBtn) {
         hintBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (hskApp && hskApp.writer && typeof hskApp.writer.showHint === 'function') {
-                hskApp.writer.showHint();
-                showFeedback('hint', 'Watch the next stroke!');
+            if (hskApp && hskApp.writer) {
+                try {
+                    // Show the next stroke hint
+                    hskApp.writer.showHint();
+                    showFeedback('hint', 'Watch the next stroke!');
+                } catch (error) {
+                    console.warn('Hint not available:', error);
+                    showFeedback('warning', 'Hint not available for this stroke.');
+                }
             } else {
                 showFeedback('error', 'Writing library not available.');
             }
@@ -551,9 +442,17 @@ function setupEventListeners() {
     if (outlineBtn) {
         outlineBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (hskApp && hskApp.writer && typeof hskApp.writer.showOutline === 'function') {
-                hskApp.writer.showOutline();
-                showFeedback('hint', 'Follow the outline.');
+            if (hskApp && hskApp.writer) {
+                // Toggle outline visibility
+                if (hskApp.writer._options.showOutline) {
+                    hskApp.writer.hideOutline();
+                    outlineBtn.textContent = '👁️ Show Outline';
+                    showFeedback('hint', 'Outline hidden.');
+                } else {
+                    hskApp.writer.showOutline();
+                    outlineBtn.textContent = '👁️ Hide Outline';
+                    showFeedback('hint', 'Outline shown.');
+                }
             } else {
                 showFeedback('error', 'Writing library not available.');
             }
@@ -696,26 +595,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('HSK App basic setup complete');
     
-    // Try to load HanziWriter in the background (don't block the UI)
-    setTimeout(async () => {
-        try {
-            await waitForHanziWriter();
-            console.log('HanziWriter loaded successfully');
-            isHanziWriterLoaded = true;
-        } catch (error) {
-            console.warn('HanziWriter not loaded initially:', error);
-            // This is fine, it will be retried when needed
-        }
+    // Check if HanziWriter is available
+    setTimeout(() => {
+        checkHanziWriterAvailability();
+        console.log('HanziWriter available:', isHanziWriterLoaded);
     }, 100);
 });
 
 // Handle network connectivity changes
 window.addEventListener('online', function() {
     console.log('Network connection restored');
-    showFeedback('success', 'Connection restored. Retrying library load...');
-    if (!isHanziWriterLoaded) {
-        retryLoadHanziWriter();
-    }
+    showFeedback('success', 'Connection restored.');
 });
 
 window.addEventListener('offline', function() {
