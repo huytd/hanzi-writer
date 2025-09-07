@@ -3,6 +3,208 @@
 // Global app instance
 let hskApp = null;
 
+// Track practice session data
+let currentSessionData = {
+    startTime: null,
+    mistakes: 0,
+    strokes: 0,
+    totalStrokes: 0
+};
+
+// Stats and progress tracking
+const STORAGE_KEYS = {
+    CHARACTER_PROGRESS: 'hsk_char_progress',
+    GLOBAL_STATS: 'hsk_global_stats',
+    DAILY_STREAK: 'hsk_daily_streak'
+};
+
+// Initialize stats system
+function initializeStats() {
+    // Load character progress
+    const characterProgress = loadFromStorage(STORAGE_KEYS.CHARACTER_PROGRESS, {});
+    
+    // Load global stats
+    const globalStats = loadFromStorage(STORAGE_KEYS.GLOBAL_STATS, {
+        totalLearned: 0,
+        totalPracticeTime: 0,
+        totalAttempts: 0,
+        lastPracticeDate: null
+    });
+    
+    // Load daily streak
+    const dailyStreak = loadFromStorage(STORAGE_KEYS.DAILY_STREAK, {
+        currentStreak: 0,
+        lastPracticeDate: null
+    });
+    
+    return {
+        characterProgress,
+        globalStats,
+        dailyStreak
+    };
+}
+
+// Storage helper functions
+function saveToStorage(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error('Failed to save to localStorage:', error);
+        return false;
+    }
+}
+
+function loadFromStorage(key, defaultValue = null) {
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : defaultValue;
+    } catch (error) {
+        console.error('Failed to load from localStorage:', error);
+        return defaultValue;
+    }
+}
+
+// Character progress tracking
+function updateCharacterProgress(character, accuracy, attempts, timeSpent) {
+    const progress = loadFromStorage(STORAGE_KEYS.CHARACTER_PROGRESS, {});
+    
+    if (!progress[character.character]) {
+        progress[character.character] = {
+            character: character.character,
+            pinyin: character.pinyin,
+            meaning: character.meaning,
+            category: character.category,
+            completed: false,
+            accuracy: 0,
+            attempts: 0,
+            timeSpent: 0,
+            firstCompleted: null,
+            lastPracticed: null
+        };
+    }
+    
+    const charProgress = progress[character.character];
+    charProgress.attempts += attempts;
+    charProgress.timeSpent += timeSpent;
+    charProgress.lastPracticed = new Date().toISOString();
+    
+    // Update accuracy (weighted average)
+    const newAccuracy = (charProgress.accuracy * (charProgress.attempts - attempts) + accuracy * attempts) / charProgress.attempts;
+    charProgress.accuracy = Math.round(newAccuracy);
+    
+    // Mark as completed if accuracy is good enough
+    if (accuracy >= 70 && !charProgress.completed) {
+        charProgress.completed = true;
+        charProgress.firstCompleted = new Date().toISOString();
+    }
+    
+    saveToStorage(STORAGE_KEYS.CHARACTER_PROGRESS, progress);
+    return charProgress;
+}
+
+// Global stats tracking
+function updateGlobalStats(characterCompleted = false, timeSpent = 0, attempts = 0) {
+    const stats = loadFromStorage(STORAGE_KEYS.GLOBAL_STATS, {
+        totalLearned: 0,
+        totalPracticeTime: 0,
+        totalAttempts: 0,
+        lastPracticeDate: null
+    });
+    
+    stats.totalPracticeTime += timeSpent;
+    stats.totalAttempts += attempts;
+    stats.lastPracticeDate = new Date().toISOString();
+    
+    if (characterCompleted) {
+        stats.totalLearned += 1;
+    }
+    
+    saveToStorage(STORAGE_KEYS.GLOBAL_STATS, stats);
+    return stats;
+}
+
+// Daily streak tracking
+function updateDailyStreak() {
+    const streak = loadFromStorage(STORAGE_KEYS.DAILY_STREAK, {
+        currentStreak: 0,
+        lastPracticeDate: null
+    });
+    
+    const today = new Date().toDateString();
+    const lastPractice = streak.lastPracticeDate ? new Date(streak.lastPracticeDate).toDateString() : null;
+    
+    if (lastPractice === today) {
+        // Already practiced today, no change
+        return streak;
+    }
+    
+    if (lastPractice) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        if (lastPractice === yesterday.toDateString()) {
+            // Consecutive day, increment streak
+            streak.currentStreak += 1;
+        } else {
+            // Streak broken, reset to 1
+            streak.currentStreak = 1;
+        }
+    } else {
+        // First practice
+        streak.currentStreak = 1;
+    }
+    
+    streak.lastPracticeDate = new Date().toISOString();
+    saveToStorage(STORAGE_KEYS.DAILY_STREAK, streak);
+    return streak;
+}
+
+// Get character completion status
+function getCharacterCompletionStatus(character) {
+    const progress = loadFromStorage(STORAGE_KEYS.CHARACTER_PROGRESS, {});
+    return progress[character.character] || {
+        completed: false,
+        accuracy: 0,
+        attempts: 0,
+        timeSpent: 0
+    };
+}
+
+// Get category progress
+function getCategoryProgress(categoryId) {
+    const progress = loadFromStorage(STORAGE_KEYS.CHARACTER_PROGRESS, {});
+    const charactersInCategory = CHARACTER_DATA.filter(char => char.category === categoryId);
+    
+    let completed = 0;
+    let totalAccuracy = 0;
+    let totalAttempts = 0;
+    
+    charactersInCategory.forEach(char => {
+        const charProgress = progress[char.character];
+        if (charProgress) {
+            if (charProgress.completed) completed++;
+            totalAccuracy += charProgress.accuracy || 0;
+            totalAttempts += charProgress.attempts || 0;
+        }
+    });
+    
+    return {
+        completed,
+        total: charactersInCategory.length,
+        averageAccuracy: charactersInCategory.length > 0 ? Math.round(totalAccuracy / charactersInCategory.length) : 0,
+        totalAttempts
+    };
+}
+
+// Reset all progress
+function resetAllProgress() {
+    localStorage.removeItem(STORAGE_KEYS.CHARACTER_PROGRESS);
+    localStorage.removeItem(STORAGE_KEYS.GLOBAL_STATS);
+    localStorage.removeItem(STORAGE_KEYS.DAILY_STREAK);
+    console.log('All progress reset');
+}
+
 // Character data
 const CHARACTER_DATA = [
     {"character": "一", "pinyin": "yī", "meaning": "one", "category": "numbers"},
@@ -156,8 +358,7 @@ function renderCategories() {
     grid.innerHTML = '';
     
     Object.entries(CATEGORIES).forEach(([categoryId, category]) => {
-        const charactersInCategory = CHARACTER_DATA.filter(char => char.category === categoryId);
-        const completedCount = 0; // Start with no completed characters
+        const categoryProgress = getCategoryProgress(categoryId);
         
         const card = document.createElement('div');
         card.className = 'category-card';
@@ -165,7 +366,7 @@ function renderCategories() {
             <span class="category-icon">${category.icon}</span>
             <div class="category-name">${category.name}</div>
             <div class="category-description">${category.description}</div>
-            <div class="category-progress">${completedCount}/${charactersInCategory.length} completed</div>
+            <div class="category-progress">${categoryProgress.completed}/${categoryProgress.total} completed</div>
         `;
         
         card.addEventListener('click', () => {
@@ -174,6 +375,9 @@ function renderCategories() {
         
         grid.appendChild(card);
     });
+    
+    // Update global stats display
+    updateGlobalStatsDisplay();
     
     console.log('Categories rendered successfully');
 }
@@ -194,12 +398,13 @@ function renderCharacterSelection(categoryId) {
     console.log('Rendering character selection for:', categoryId);
     
     const charactersInCategory = CHARACTER_DATA.filter(char => char.category === categoryId);
+    const categoryProgress = getCategoryProgress(categoryId);
     const grid = document.getElementById('characters-grid');
     const title = document.getElementById('category-title');
     const progressText = document.getElementById('category-progress-text');
     
     if (title) title.textContent = CATEGORIES[categoryId].name;
-    if (progressText) progressText.textContent = `0/${charactersInCategory.length}`;
+    if (progressText) progressText.textContent = `${categoryProgress.completed}/${charactersInCategory.length}`;
     
     if (!grid) {
         console.error('Characters grid not found');
@@ -209,12 +414,22 @@ function renderCharacterSelection(categoryId) {
     grid.innerHTML = '';
     
     charactersInCategory.forEach((character, index) => {
+        const charStatus = getCharacterCompletionStatus(character);
         const card = document.createElement('div');
-        card.className = 'character-card';
+        card.className = `character-card ${charStatus.completed ? 'completed' : ''}`;
+        
+        let statusIcon = '';
+        if (charStatus.completed) {
+            statusIcon = '<div class="completion-badge">✓</div>';
+        } else if (charStatus.attempts > 0) {
+            statusIcon = '<div class="progress-badge">●</div>';
+        }
+        
         card.innerHTML = `
             <div class="character-display-small">${character.character}</div>
             <div class="character-pinyin-small">${character.pinyin}</div>
             <div class="character-meaning-small">${character.meaning}</div>
+            ${statusIcon}
         `;
         
         card.addEventListener('click', () => {
@@ -259,6 +474,19 @@ function setupPracticeScreen(character) {
     if (progressFill) {
         progressFill.style.width = '0%';
     }
+    
+    // Track practice start time
+    if (hskApp) {
+        hskApp.practiceStartTime = Date.now();
+    }
+    
+    // Initialize session data
+    currentSessionData = {
+        startTime: Date.now(),
+        mistakes: 0,
+        strokes: 0,
+        totalStrokes: 0
+    };
     
     // Initialize Hanzi Writer
     initializeHanziWriter(character);
@@ -311,16 +539,54 @@ function initializeHanziWriter(character) {
             
             onMistake: function(strokeData) {
                 showFeedback('error', 'Try again! Watch the stroke order.');
+                currentSessionData.mistakes++;
             },
             onCorrectStroke: function(strokeData) {
                 showFeedback('success', 'Great stroke!');
+                currentSessionData.strokes++;
                 updateStrokeProgress(strokeData);
             },
             onComplete: function(summaryData) {
                 showFeedback('success', '🎉 Character completed!');
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) nextBtn.style.display = 'block';
-                updateStrokeProgress({ strokeNum: summaryData.totalStrokes - 1 });
+                
+                // Update stroke progress with safe values
+                const safeStrokeNum = (summaryData.totalStrokes || currentSessionData.strokes || 1) - 1;
+                updateStrokeProgress({ strokeNum: safeStrokeNum });
+                
+                // Track character completion
+                if (hskApp && hskApp.currentCharacter) {
+                    const character = hskApp.currentCharacter;
+                    
+                    // Debug: Log both data sources
+                    console.log('HanziWriter completion data:', summaryData);
+                    console.log('Session data:', currentSessionData);
+                    
+                    // Use session data as primary source, fallback to summaryData
+                    const totalStrokes = currentSessionData.strokes || summaryData.totalStrokes || 1;
+                    const mistakes = currentSessionData.mistakes || summaryData.mistakes || 0;
+                    const accuracy = totalStrokes > 0 ? Math.round((totalStrokes / (totalStrokes + mistakes)) * 100) : 100;
+                    const attempts = mistakes + 1;
+                    const timeSpent = currentSessionData.startTime ? Math.round((Date.now() - currentSessionData.startTime) / 1000) : 0;
+                    
+                    console.log('Final calculated stats:', { totalStrokes, mistakes, accuracy, attempts, timeSpent });
+                    
+                    updateCharacterProgress(character, accuracy, attempts, timeSpent);
+                    updateGlobalStats(true, timeSpent, attempts);
+                    updateDailyStreak();
+                    
+                    // Show results screen with stats
+                    showResultsScreen(character, accuracy, attempts, timeSpent);
+                    
+                    // Reset session data for next character
+                    currentSessionData = {
+                        startTime: null,
+                        mistakes: 0,
+                        strokes: 0,
+                        totalStrokes: 0
+                    };
+                }
             }
         });
         
@@ -371,6 +637,65 @@ function showFeedback(type, message) {
             feedback.innerHTML = '';
         }, 3000);
     }
+}
+
+// Update global stats display
+function updateGlobalStatsDisplay() {
+    const globalStats = loadFromStorage(STORAGE_KEYS.GLOBAL_STATS, {
+        totalLearned: 0,
+        totalPracticeTime: 0,
+        totalAttempts: 0,
+        lastPracticeDate: null
+    });
+    
+    const dailyStreak = loadFromStorage(STORAGE_KEYS.DAILY_STREAK, {
+        currentStreak: 0,
+        lastPracticeDate: null
+    });
+    
+    // Update total learned
+    const totalLearnedEl = document.getElementById('total-learned');
+    if (totalLearnedEl) {
+        totalLearnedEl.textContent = globalStats.totalLearned;
+    }
+    
+    // Update streak days
+    const streakDaysEl = document.getElementById('streak-days');
+    if (streakDaysEl) {
+        streakDaysEl.textContent = dailyStreak.currentStreak;
+    }
+}
+
+// Show results screen with stats
+function showResultsScreen(character, accuracy, attempts, timeSpent) {
+    // Debug: Log the values being passed
+    console.log('showResultsScreen called with:', { character: character.character, accuracy, attempts, timeSpent });
+    
+    // Update results screen elements
+    const completionIcon = document.getElementById('completion-icon');
+    const resultsTitle = document.getElementById('results-title');
+    const resultsMessage = document.getElementById('results-message');
+    const accuracyScore = document.getElementById('accuracy-score');
+    const attemptsCount = document.getElementById('attempts-count');
+    const completionTime = document.getElementById('completion-time');
+    
+    if (completionIcon) completionIcon.textContent = '🎉';
+    if (resultsTitle) resultsTitle.textContent = 'Great Job!';
+    if (resultsMessage) resultsMessage.textContent = `You've completed ${character.character}`;
+    
+    // Ensure values are numbers and not NaN
+    const safeAccuracy = isNaN(accuracy) ? 100 : accuracy;
+    const safeAttempts = isNaN(attempts) ? 1 : attempts;
+    const safeTimeSpent = isNaN(timeSpent) ? 0 : timeSpent;
+    
+    if (accuracyScore) accuracyScore.textContent = `${safeAccuracy}%`;
+    if (attemptsCount) attemptsCount.textContent = safeAttempts;
+    if (completionTime) completionTime.textContent = `${safeTimeSpent}s`;
+    
+    console.log('Updated results screen with safe values:', { safeAccuracy, safeAttempts, safeTimeSpent });
+    
+    // Show results screen
+    showScreen('results-screen');
 }
 
 
@@ -535,6 +860,22 @@ function setupEventListeners() {
         });
     }
     
+    // Set up reset progress button
+    const resetProgressBtn = document.getElementById('reset-progress-btn');
+    if (resetProgressBtn) {
+        resetProgressBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                resetAllProgress();
+                showFeedback('success', 'All progress has been reset');
+                // Refresh the categories to show updated progress
+                setTimeout(() => {
+                    renderCategories();
+                }, 1000);
+            }
+        });
+    }
+    
     // Set up results screen navigation
     const practiceAgainBtn = document.getElementById('practice-again-btn');
     if (practiceAgainBtn) {
@@ -572,6 +913,9 @@ function setupEventListeners() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, setting up HSK App...');
     
+    // Initialize stats system
+    initializeStats();
+    
     // Initialize simple app state first
     hskApp = {
         currentScreen: 'welcome-screen',
@@ -579,7 +923,8 @@ document.addEventListener('DOMContentLoaded', function() {
         currentCharacter: null,
         currentCharacterIndex: 0,
         charactersInCategory: [],
-        writer: null
+        writer: null,
+        practiceStartTime: null
     };
     
     // Setup all event listeners immediately
