@@ -296,7 +296,7 @@ function initializeHanziWriter(character) {
         const writer = HanziWriter.create(container, character.character, {
             width: 320,
             height: 320,
-            padding: 20,
+            padding: 0,
             strokeAnimationSpeed: 1,
             delayBetweenStrokes: 300,
             strokeColor: '#2563eb',
@@ -443,6 +443,7 @@ function setupEventListeners() {
         outlineBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (hskApp && hskApp.writer) {
+                hskApp.writer.cancelQuiz();
                 // Toggle outline visibility
                 if (hskApp.writer._options.showOutline) {
                     hskApp.writer.hideOutline();
@@ -453,6 +454,7 @@ function setupEventListeners() {
                     outlineBtn.textContent = '👁️ Hide Outline';
                     showFeedback('hint', 'Outline shown.');
                 }
+                hskApp.writer.quiz();
             } else {
                 showFeedback('error', 'Writing library not available.');
             }
@@ -465,11 +467,7 @@ function setupEventListeners() {
             e.preventDefault();
             if (hskApp && hskApp.writer && typeof hskApp.writer.cancelQuiz === 'function') {
                 hskApp.writer.cancelQuiz();
-                setTimeout(() => {
-                    if (hskApp.writer && typeof hskApp.writer.quiz === 'function') {
-                        hskApp.writer.quiz();
-                    }
-                }, 500);
+                hskApp.writer.quiz();
                 showFeedback('hint', 'Cleared! Try again.');
                 
                 // Reset progress bar

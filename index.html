@@ -118,7 +118,15 @@
       </div>
 
       <div class="writing-area">
-        <div id="hanzi-writer-container" class="hanzi-writer-container"></div>
+        <div class="writing-container">
+          <div id="hanzi-writer-container"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" id="writing-grid">
+            <line x1="0" y1="0" x2="320" y2="320" stroke="#DDD" />
+            <line x1="320" y1="0" x2="0" y2="320" stroke="#DDD" />
+            <line x1="160" y1="0" x2="160" y2="320" stroke="#DDD" />
+            <line x1="0" y1="160" x2="320" y2="160" stroke="#DDD" />
+          </svg>
+        </div>
       </div>
 
       <div class="practice-controls">
