@@ -426,7 +426,7 @@ function setupEventListeners() {
             if (hskApp && hskApp.writer) {
                 try {
                     // Show the next stroke hint
-                    hskApp.writer.showHint();
+                    hskApp.writer.animateCharacter();
                     showFeedback('hint', 'Watch the next stroke!');
                 } catch (error) {
                     console.warn('Hint not available:', error);
