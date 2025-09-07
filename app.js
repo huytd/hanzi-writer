@@ -15,7 +15,8 @@ let currentSessionData = {
 const STORAGE_KEYS = {
     CHARACTER_PROGRESS: 'hsk_char_progress',
     GLOBAL_STATS: 'hsk_global_stats',
-    DAILY_STREAK: 'hsk_daily_streak'
+    DAILY_STREAK: 'hsk_daily_streak',
+    USER_SETTINGS: 'hsk_user_settings'
 };
 
 // Initialize stats system
@@ -202,7 +203,64 @@ function resetAllProgress() {
     localStorage.removeItem(STORAGE_KEYS.CHARACTER_PROGRESS);
     localStorage.removeItem(STORAGE_KEYS.GLOBAL_STATS);
     localStorage.removeItem(STORAGE_KEYS.DAILY_STREAK);
+    // Note: We don't reset user settings as they are preferences, not progress
     console.log('All progress reset');
+}
+
+// User settings management
+function loadUserSettings() {
+    return loadFromStorage(STORAGE_KEYS.USER_SETTINGS, {
+        showOutlineDefault: true,
+        showPinyin: true,
+        showMeaning: true,
+        hintAfter: 2,
+        strokeSpeed: 1
+    });
+}
+
+function saveUserSettings(settings) {
+    return saveToStorage(STORAGE_KEYS.USER_SETTINGS, settings);
+}
+
+function updateUserSetting(key, value) {
+    const settings = loadUserSettings();
+    settings[key] = value;
+    saveUserSettings(settings);
+    return settings;
+}
+
+function applyUserSettings() {
+    const settings = loadUserSettings();
+    
+    // Apply outline setting
+    const outlineCheckbox = document.getElementById('show-outline-default');
+    if (outlineCheckbox) {
+        outlineCheckbox.checked = settings.showOutlineDefault;
+    }
+    
+    // Apply pinyin setting
+    const pinyinCheckbox = document.getElementById('show-pinyin');
+    if (pinyinCheckbox) {
+        pinyinCheckbox.checked = settings.showPinyin;
+    }
+    
+    // Apply meaning setting
+    const meaningCheckbox = document.getElementById('show-meaning');
+    if (meaningCheckbox) {
+        meaningCheckbox.checked = settings.showMeaning;
+    }
+    
+    // Apply hint setting
+    const hintSelect = document.getElementById('hint-after');
+    if (hintSelect) {
+        hintSelect.value = settings.hintAfter;
+    }
+    
+    // Apply stroke speed setting
+    const strokeSpeedSelect = document.getElementById('stroke-speed');
+    if (strokeSpeedSelect) {
+        strokeSpeedSelect.value = settings.strokeSpeed;
+    }
 }
 
 // Character data (will be loaded from JSON file)
@@ -369,6 +427,7 @@ function showScreen(screenId) {
         // Update library status when showing settings
         if (screenId === 'settings-screen') {
             updateLibraryStatus();
+            applyUserSettings();
         }
         
         return true;
@@ -570,11 +629,14 @@ function initializeHanziWriter(character) {
     try {
         console.log('Creating Hanzi Writer for:', character.character);
         
+        // Get user settings
+        const settings = loadUserSettings();
+        
         const writer = HanziWriter.create(container, character.character, {
             width: 320,
             height: 320,
             padding: 0,
-            strokeAnimationSpeed: 1,
+            strokeAnimationSpeed: settings.strokeSpeed,
             delayBetweenStrokes: 300,
             strokeColor: '#2563eb',
             drawingWidth: 24,
@@ -582,9 +644,10 @@ function initializeHanziWriter(character) {
             highlightColor: '#fbbf24',
             outlineColor: '#d1d5db',
             drawingColor: '#059669',
-            showHintAfterMisses: 2,
+            showHintAfterMisses: settings.hintAfter,
             highlightOnComplete: true,
             highlightCompleteColor: '#10b981',
+            showOutline: settings.showOutlineDefault,
             
             onMistake: function(strokeData) {
                 showFeedback('error', 'Try again! Watch the stroke order.');
@@ -655,6 +718,12 @@ function initializeHanziWriter(character) {
         
         // Start quiz mode
         writer.quiz();
+        
+        // Update outline button text based on setting
+        const outlineBtn = document.getElementById('show-outline-btn');
+        if (outlineBtn) {
+            outlineBtn.textContent = settings.showOutlineDefault ? '👁️ Hide Outline' : '👁️ Show Outline';
+        }
         
         console.log('Hanzi Writer created successfully');
         
@@ -1017,6 +1086,42 @@ function setupEventListeners() {
         });
     }
     
+    // Set up settings event listeners
+    const outlineCheckbox = document.getElementById('show-outline-default');
+    if (outlineCheckbox) {
+        outlineCheckbox.addEventListener('change', function(e) {
+            updateUserSetting('showOutlineDefault', e.target.checked);
+        });
+    }
+    
+    const pinyinCheckbox = document.getElementById('show-pinyin');
+    if (pinyinCheckbox) {
+        pinyinCheckbox.addEventListener('change', function(e) {
+            updateUserSetting('showPinyin', e.target.checked);
+        });
+    }
+    
+    const meaningCheckbox = document.getElementById('show-meaning');
+    if (meaningCheckbox) {
+        meaningCheckbox.addEventListener('change', function(e) {
+            updateUserSetting('showMeaning', e.target.checked);
+        });
+    }
+    
+    const hintSelect = document.getElementById('hint-after');
+    if (hintSelect) {
+        hintSelect.addEventListener('change', function(e) {
+            updateUserSetting('hintAfter', parseInt(e.target.value));
+        });
+    }
+    
+    const strokeSpeedSelect = document.getElementById('stroke-speed');
+    if (strokeSpeedSelect) {
+        strokeSpeedSelect.addEventListener('change', function(e) {
+            updateUserSetting('strokeSpeed', parseFloat(e.target.value));
+        });
+    }
+    
     // Set up results screen navigation
     const practiceAgainBtn = document.getElementById('practice-again-btn');
     if (practiceAgainBtn) {
@@ -1098,4 +1203,15 @@ window.addEventListener('online', function() {
 window.addEventListener('offline', function() {
     console.log('Network connection lost');
     showFeedback('warning', 'Connection lost. Some features may not work.');
-}); 
+});
+
+// Handle library retry functionality
+function handleRetryLibrary() {
+    console.log('Retrying library load...');
+    showLoadingMessage('Reloading writing library...');
+    
+    // Reload the page to retry library loading
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+} 
