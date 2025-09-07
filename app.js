@@ -596,7 +596,12 @@ function initializeHanziWriter(character) {
                 updateStrokeProgress(strokeData);
             },
             onComplete: function(summaryData) {
+                // Enhanced completion feedback
                 showFeedback('success', '🎉 Character completed!');
+                
+                // Show completion celebration
+                showCompletionCelebration();
+                
                 const nextBtn = document.getElementById('next-btn');
                 if (nextBtn) nextBtn.style.display = 'block';
                 
@@ -625,8 +630,13 @@ function initializeHanziWriter(character) {
                     updateGlobalStats(true, timeSpent, attempts);
                     updateDailyStreak();
                     
-                    // Show results screen with stats
-                    showResultsScreen(character, accuracy, attempts, timeSpent);
+                    // Show completion stats preview on practice screen
+                    showCompletionStatsPreview(character, accuracy, attempts, timeSpent);
+                    
+                    // Delay before showing results screen to let user see their achievement
+                    setTimeout(() => {
+                        showResultsScreen(character, accuracy, attempts, timeSpent);
+                    }, 1000); // 3 second delay
                     
                     // Reset session data for next character
                     currentSessionData = {
@@ -688,6 +698,74 @@ function showFeedback(type, message) {
     }
 }
 
+// Show completion celebration animation
+function showCompletionCelebration() {
+    const container = document.getElementById('hanzi-writer-container');
+    if (!container) return;
+    
+    // Create celebration overlay
+    const celebration = document.createElement('div');
+    celebration.className = 'completion-celebration';
+    celebration.innerHTML = `
+        <div class="celebration-content">
+            <div class="celebration-icon">🎉</div>
+            <div class="celebration-text">Excellent!</div>
+        </div>
+    `;
+    
+    container.appendChild(celebration);
+    
+    // Remove celebration after animation
+    setTimeout(() => {
+        if (celebration.parentNode) {
+            celebration.parentNode.removeChild(celebration);
+        }
+    }, 1000);
+}
+
+// Show completion stats preview on practice screen
+function showCompletionStatsPreview(character, accuracy, attempts, timeSpent) {
+    const feedback = document.getElementById('practice-feedback');
+    if (!feedback) return;
+    
+    // Create stats preview
+    const statsPreview = document.createElement('div');
+    statsPreview.className = 'completion-stats-preview';
+    statsPreview.innerHTML = `
+        <div class="stats-preview-content">
+            <div class="stats-preview-title">🎯 Great Job!</div>
+            <div class="stats-preview-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Accuracy:</span>
+                    <span class="stat-value">${accuracy}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value">${timeSpent}s</span>
+                </div>
+            </div>
+            <div class="stats-preview-message">Moving to results...</div>
+        </div>
+    `;
+    
+    feedback.innerHTML = '';
+    feedback.appendChild(statsPreview);
+    
+    // Add countdown effect
+    let countdown = 3;
+    const countdownElement = statsPreview.querySelector('.stats-preview-message');
+    
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            countdownElement.textContent = `Moving to results in ${countdown}...`;
+        } else {
+            countdownElement.textContent = 'Moving to results...';
+            clearInterval(countdownInterval);
+        }
+    }, 100);
+}
+
 // Update global stats display
 function updateGlobalStatsDisplay() {
     const globalStats = loadFromStorage(STORAGE_KEYS.GLOBAL_STATS, {
@@ -743,8 +821,22 @@ function showResultsScreen(character, accuracy, attempts, timeSpent) {
     
     console.log('Updated results screen with safe values:', { safeAccuracy, safeAttempts, safeTimeSpent });
     
-    // Show results screen
+    // Show results screen with smooth transition
     showScreen('results-screen');
+    
+    // Add entrance animation to results screen
+    const resultsScreen = document.getElementById('results-screen');
+    if (resultsScreen) {
+        resultsScreen.style.opacity = '0';
+        resultsScreen.style.transform = 'translateY(20px)';
+        
+        // Animate in
+        setTimeout(() => {
+            resultsScreen.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            resultsScreen.style.opacity = '1';
+            resultsScreen.style.transform = 'translateY(0)';
+        }, 50);
+    }
 }
 
 
